@@ -1,0 +1,16 @@
+import pandas as pd
+import joblib
+
+# ——— 1. Cargar el modelo guardado ———
+pipeline = joblib.load('modelo_xgb_pipeline.joblib')
+
+# ——— 2. Cargar nuevos datos (sin la columna objetivo) ———
+nuevos_datos = pd.read_csv('nuevos_datos.csv')  # Reemplazá por el nombre real del archivo
+
+# ——— 3. Hacer predicciones ———
+predicciones = pipeline.predict(nuevos_datos)
+probabilidades = pipeline.predict_proba(nuevos_datos)
+
+# ——— 4. Mostrar resultados ———
+for i, (pred, prob) in enumerate(zip(predicciones, probabilidades)):
+    print(f"Fila {i}: Predicción = {pred}, Probabilidades = {prob}")
