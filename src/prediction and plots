@@ -1,0 +1,44 @@
+import pandas as pd
+import joblib
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
+
+# ——— 1. Cargar el modelo entrenado ———
+pipeline = joblib.load('modelo_xgb_pipeline.joblib')
+
+# ——— 2. Cargar los nuevos datos ———
+df = pd.read_csv('nuevos_datos.csv')  # Incluir columna 'target' si querés comparar
+
+# ——— 3. Separar columnas si existe columna real ———
+has_target = 'target' in df.columns
+X_new = df.drop(columns='target') if has_target else df
+
+# ——— 4. Predicciones ———
+y_pred = pipeline.predict(X_new)
+df['prediccion'] = y_pred
+
+# ——— 5. Guardar resultados ———
+df.to_csv('resultados_con_predicciones.csv', index=False)
+print("Resultados guardados en 'resultados_con_predicciones.csv'.")
+
+# ——— 6. Evaluación si hay datos reales ———
+if has_target:
+    y_true = df['target']
+    print("\nReporte de clasificación:")
+    print(classification_report(y_true, y_pred))
+
+    # ——— 7. Gráfico: Matriz de confusión ———
+    cm = confusion_matrix(y_true, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot(cmap='Blues')
+    plt.title("Matriz de Confusión")
+    plt.show()
+
+    # ——— 8. Gráfico: Conteo de predicciones vs reales ———
+    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+    df['target'].value_counts().plot(kind='bar', ax=ax[0], title='Valores reales')
+    df['prediccion'].value_counts().plot(kind='bar', ax=ax[1], title='Predicciones')
+    plt.tight_layout()
+    plt.show()
+else:
+    print("No se encontró la columna 'target'; se omitió la evaluación.")
