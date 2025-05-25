@@ -30,7 +30,7 @@ preprocessor = ColumnTransformer(
 
 pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('classifier', XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42))
+    ('classifier', XGBClassifier(use_label_encoder=True, eval_metric='logloss', random_state=42))
 ])
 
 # ——— 6. Entrenar ———
