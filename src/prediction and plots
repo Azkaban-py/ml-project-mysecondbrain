@@ -1,7 +1,11 @@
 import pandas as pd
+
 import joblib
+
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
+
+from sklearn.metrics import confusion_matrix,
+ ConfusionMatrixDisplay, classification_report
 
 # ——— 1. Cargar el modelo entrenado ———
 pipeline = joblib.load('modelo_xgb_pipeline.joblib')
